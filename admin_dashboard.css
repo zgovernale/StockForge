@@ -8,39 +8,27 @@ body {
     height: 100vh;
 }
 
-.login-container {
+.dashboard-container {
     background-color: #6096BA;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-    width: 300px;
+    width: 400px; /* Adjust width based on your design */
     text-align: center;
 }
 
 .logo {
     max-width: 100%;
-    margin-bottom: 20px; /* Add margin to create space between logo and login form */
+    margin-bottom: 20px;
 }
 
 h2 {
     color: #03045E;
 }
 
-form {
-    display: flex;
-    flex-direction: column;
-}
-
-label {
-    margin-top: 10px;
-    color: #03045E;
-}
-
-input {
-    padding: 8px;
-    margin-top: 5px;
-    border: 1px solid #03045E;
-    border-radius: 4px;
+.stocks-section,
+.market-section {
+    margin-top: 20px;
 }
 
 button {
@@ -51,11 +39,13 @@ button {
     border-radius: 4px;
     cursor: pointer;
     margin-top: 10px;
-	transition: background-color 0.3s ease-in-out; /* Added transition effect */
+    transition: background-color 0.3s ease-in-out; /* Added transition effect */
+}
+
+button.yellow-button {
+    background-color: #F7C442;
 }
 
 button:hover {
     background-color: #F7C442;
 }
-
-
