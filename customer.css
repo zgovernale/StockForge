@@ -1,3 +1,5 @@
+/* styles.css */
+
 body {
     background-color: #A3CEF1;
     font-family: Arial, sans-serif;
@@ -18,7 +20,7 @@ body {
 }
 
 .logo {
-    max-width: 100%;
+    max-width: 70%; /* Decreased the max-width to make the logo smaller */
     margin-bottom: 20px;
 }
 
@@ -49,4 +51,3 @@ button.yellow-button {
 button:hover {
     background-color: #F7C442;
 }
-
