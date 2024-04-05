@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Portfolio</title>
+  <style>
+    .portfolio-item {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      border-bottom: 1px solid #ccc;
+      padding: 10px 0;
+    }
+  </style>
+</head>
+<body>
+  <h2>Portfolio</h2>
+  <div id="portfolio"></div>
+  <div id="portfolio-pagination"></div>
+
+  <script>
+    const portfolioPageSize = 10;
+    let portfolioPage = 1;
+
+    // Function to fetch portfolio data from the server with pagination
+    function fetchPortfolio(pageNumber) {
+      fetch(`/portfolio?page=${pageNumber}&pageSize=${portfolioPageSize}`)
+        .then(response => response.json())
+        .then(data => {
+          const portfolioElement = document.getElementById('portfolio');
+          const portfolioPagination = document.getElementById('portfolio-pagination');
+          portfolioElement.innerHTML = '';
+          portfolioPagination.innerHTML = '';
+
+          data.items.forEach(item => {
+            const portfolioItem = document.createElement('div');
+            portfolioItem.classList.add('portfolio-item');
+            portfolioItem.innerHTML = `
+              <p><strong>Stock:</strong> ${item.stocksName} (${item.stockTicker})</p>
+              <p><strong>Company:</strong> ${item.companyName}</p>
+              <p><strong>Price:</strong> $${item.price_value}</p>
+              <p><strong>Volume:</strong> ${item.volume_value}</p>
+            `;
+            portfolioElement.appendChild(portfolioItem);
+          });
+
+          if (data.totalPages > 1) {
+            for (let i = 1; i <= data.totalPages; i++) {
+              const pageButton = document.createElement('button');
+              pageButton.textContent = i;
+              pageButton.addEventListener('click', () => {
+                portfolioPage = i;
+                fetchPortfolio(portfolioPage);
+              });
+              portfolioPagination.appendChild(pageButton);
+            }
+          }
+        })
+        .catch(error => {
+          console.error('Error fetching portfolio data:', error);
+        });
+    }
+
+    // Fetch portfolio data initially when the page loads
+    fetchPortfolio(portfolioPage);
+
+    // Fetch data every 10 seconds
+    setInterval(() => {
+      fetchPortfolio(portfolioPage);
+    }, 10000); // 10 seconds
+  </script>
+</body>
+</html>

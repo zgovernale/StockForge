@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sell Stocks</title>
+</head>
+<body>
+  <h2>Sell Stocks</h2>
+  
+  <label for="stockTicker">Stock Ticker:</label>
+  <input type="text" id="stockTicker">
+
+  <label for="volume">Volume:</label>
+  <input type="number" id="volume">
+
+  <button onclick="sellStock()">Sell Stock</button>
+
+  <script>
+    // Function to sell stock
+    function sellStock() {
+      const accountNumberId = 123; // Replace with the actual account number ID
+      
+      const stockTicker = document.getElementById('stockTicker').value;
+      const volume = parseInt(document.getElementById('volume').value);
+
+      if (!stockTicker || !volume) {
+        alert('Please enter stock ticker and volume.');
+        return;
+      }
+
+      const confirmation = confirm(`Would you like to sell ${volume} shares of ${stockTicker}?`);
+
+      if (!confirmation) {
+        return;
+      }
+
+      fetch('/sell-stock', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          accountNumberId: accountNumberId,
+          stockTicker: stockTicker,
+          volume: volume
+        })
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        alert(data.message);
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred while selling stocks. Please try again later.');
+      });
+    }
+  </script>
+</body>
+</html>

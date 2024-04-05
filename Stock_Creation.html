@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add New Stock</title>
+</head>
+<body>
+  <button id="addNewStockBtn">Add New Stock</button>
+
+  <script>
+    document.getElementById('addNewStockBtn').addEventListener('click', () => {
+      const stocksName = prompt('Enter Stock Name:');
+      const companyName = prompt('Enter Company Name:');
+      const stockTicker = prompt('Enter Stock Ticker:');
+      const price = prompt('Enter Price:');
+      const volume = prompt('Enter Volume:');
+
+      if (stocksName && companyName && stockTicker && price && volume) {
+        const confirmation = confirm(`Would you like to add the following stock?\n\nStock Name: ${stocksName}\nCompany Name: ${companyName}\nStock Ticker: ${stockTicker}\nPrice: ${price}\nVolume: ${volume}`);
+
+        if (confirmation) {
+          // Make a POST request to the server to add the new stock
+          fetch('/stocks/create', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              stocksName,
+              companyName,
+              stockTicker,
+              price,
+              volume
+            })
+          })
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Failed to add stock');
+            }
+            return response.json();
+          })
+          .then(data => {
+            alert(data.message);
+          })
+          .catch(error => {
+            console.error('Error:', error.message);
+            alert('Failed to add stock');
+          });
+        }
+      } else {
+        alert('Please enter all required information');
+      }
+    });
+  </script>
+</body>
+</html>

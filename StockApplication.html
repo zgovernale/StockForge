@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stock Data</title>
+</head>
+<body>
+  <table>
+    <thead>
+      <tr>
+        <th>Stock Ticker</th>
+        <th>Price</th>
+        <th>Daily High</th>
+        <th>Daily Low</th>
+        <th>Volume</th>
+        <th>Market Capitalization</th>
+      </tr>
+    </thead>
+    <tbody id="stockData"></tbody>
+  </table>
+
+  <div id="pagination">
+    <button onclick="prevPage()">Previous</button>
+    <span id="currentPage">1</span>
+    <button onclick="nextPage()">Next</button>
+  </div>
+
+  <script>
+    let currentPage = 1;
+
+    // Function to fetch stock data from the server with pagination
+    function fetchStockData(pageNumber) {
+      fetch(`/stocks?page=${pageNumber}`)
+        .then(response => response.json())
+        .then(data => {
+          // Update the HTML content to display stock data
+          const stockDataElement = document.getElementById('stockData');
+          stockDataElement.innerHTML = '';
+
+          data.forEach(stock => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+              <td>${stock.stockTicker}</td>
+              <td>$${stock.price}</td>
+              <td>$${stock.dailyHigh}</td>
+              <td>$${stock.dailyLow}</td>
+              <td>${stock.volume}</td>
+              <td>$${stock.market_capitalization}</td>
+            `;
+            stockDataElement.appendChild(row);
+          });
+        })
+        .catch(error => {
+          console.error('Error fetching stock data:', error);
+        });
+    }
+
+    // Function to go to the previous page
+    function prevPage() {
+      if (currentPage > 1) {
+        currentPage--;
+        fetchStockData(currentPage);
+        document.getElementById('currentPage').textContent = currentPage;
+      }
+    }
+
+    // Function to go to the next page
+    function nextPage() {
+      currentPage++;
+      fetchStockData(currentPage);
+      document.getElementById('currentPage').textContent = currentPage;
+    }
+
+    // Fetch stock data initially when the page loads
+    fetchStockData(currentPage);
+
+    // Fetch stock data every 5 seconds
+    setInterval(() => fetchStockData(currentPage), 5000);
+  </script>
+</body>
+</html>

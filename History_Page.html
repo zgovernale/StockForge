@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Transaction History</title>
+  <style>
+    .transaction-container {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .transaction-item {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      border: 1px solid #ccc;
+      padding: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Transaction History</h2>
+  <div id="transactions" class="transaction-container"></div>
+  <div id="pagination"></div>
+
+  <script>
+    const pageSize = 10;
+    let page = 1;
+
+    // Function to fetch transaction history
+    function fetchTransactions(pageNumber) {
+      fetch(`/transactions?page=${pageNumber}&pageSize=${pageSize}`)
+        .then(response => response.json())
+        .then(data => {
+          const transactionsElement = document.getElementById('transactions');
+          const pagination = document.getElementById('pagination');
+          transactionsElement.innerHTML = '';
+          pagination.innerHTML = '';
+
+          data.items.forEach(transaction => {
+            const transactionItem = document.createElement('div');
+            transactionItem.classList.add('transaction-item');
+            transactionItem.innerHTML = `
+              <p><strong>Date:</strong> ${transaction.date}</p>
+              <p><strong>Type:</strong> ${transaction.type}</p>
+              <p><strong>Category:</strong> ${transaction.category}</p>
+              <p><strong>Amount:</strong> ${transaction.amount}</p>
+            `;
+            transactionsElement.appendChild(transactionItem);
+          });
+
+          if (data.totalPages > 1) {
+            for (let i = 1; i <= data.totalPages; i++) {
+              const pageButton = document.createElement('button');
+              pageButton.textContent = i;
+              pageButton.addEventListener('click', () => {
+                page = i;
+                fetchTransactions(page);
+              });
+              pagination.appendChild(pageButton);
+            }
+          }
+        })
+        .catch(error => {
+          console.error('Error fetching transaction history:', error);
+          alert('An error occurred while fetching transaction history. Please try again later.');
+        });
+    }
+
+    // Fetch transaction history initially when the page loads
+    fetchTransactions(page);
+
+    // Fetch data every 10 seconds
+    setInterval(() => {
+      fetchTransactions(page);
+    }, 10000); // 10 seconds
+  </script>
+</body>
+</html>
