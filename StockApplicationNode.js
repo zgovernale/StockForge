@@ -5,9 +5,10 @@ const buyStockHandler = require('./buyStock');
 const sellStockHandler = require('./sellStock');
 const cashDepositHandler = require('./cashDeposit');
 const cashWithdrawalHandler = require('./cashWithdrawal');
+const stockCreation = require('./stockCreation');
 
 const app = express();
-const port = 3000;
+const port = 4000;
 
 const connection = mysql.createConnection({
   host: "EC2AMAZ-H8DPT2R",
@@ -30,6 +31,11 @@ sellStockHandler(app, connection);
 // Import and use the route handlers for cash deposit and withdrawal
 cashDepositHandler(app, connection);
 cashWithdrawalHandler(app, connection);
+
+// Import and use the stockCreation route handler
+app.post('/stocks/create', (req, res) => {
+	createStock(req, res, connection);
+});
 
 let isFetchingStockData = false;
 

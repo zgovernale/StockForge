@@ -2,6 +2,7 @@
 #####Governale, Fillipitch, Boardman#####
 #####IFT 401, Capstone####
 
+import os
 import mysql.connector
 import random
 import time
@@ -9,8 +10,11 @@ import requests
 from datetime import datetime, timedelta
 from decimal import Decimal
 
+# Get the Node.js server hostname from the environment variable
+node_server_hostname = os.getenv('NODE_SERVER_HOSTNAME')
+
 # Start signal to Node.js server
-requests.get('http://node_server/start') # Change this to the Node.js server name
+requests.get(f'http://{node_server_hostname}/start')
 
 # Connect to the database
 conn = mysql.connector.connect(
@@ -113,4 +117,4 @@ while datetime.now() - start_time < duration:
 conn.close()
 
 # Termination signal to Node.js server
-requests.get('http://node_server/stop') # Change this to the Node.js server name
+requests.get(f'http://{node_server_hostname}/stop')
