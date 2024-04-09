@@ -10,6 +10,9 @@ import requests
 from datetime import datetime, timedelta
 from decimal import Decimal
 
+# Set the NODE_SERVER_HOSTNAME environment variable
+os.environ['NODE_SERVER_HOSTNAME'] = '172.31.93.153'
+
 # Get the Node.js server hostname from the environment variable
 node_server_hostname = os.getenv('NODE_SERVER_HOSTNAME')
 
